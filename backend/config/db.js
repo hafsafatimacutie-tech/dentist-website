@@ -19,7 +19,7 @@ function isPlaceholderMongoUri(uri) {
 async function connectDB() {
   try {
     if (!process.env.MONGO_URI || isPlaceholderMongoUri(process.env.MONGO_URI)) {
-      console.log('MongoDB not configured; skipping connection for local preview.');
+      console.log('MongoDB not configured; continuing without database connection.');
       return false;
     }
 
