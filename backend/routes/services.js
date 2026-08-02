@@ -10,9 +10,6 @@ router.get('/', async (req, res) => {
     const services = await Service.find({ active: true }).sort({ createdAt: 1 });
     res.json(services);
   } catch (err) {
-    if (err.name === 'MongooseError' || err.message?.includes('connected')) {
-      return res.json([]);
-    }
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 });

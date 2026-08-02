@@ -25,9 +25,6 @@ router.post('/', async (req, res) => {
     const booking = await Booking.create({ patientName, phone, email, service, date, time });
     res.status(201).json({ message: 'Booking request received', booking });
   } catch (err) {
-    if (err.name === 'MongooseError' || err.message?.includes('connected')) {
-      return res.status(503).json({ message: 'Booking service is currently unavailable. Please try again later.' });
-    }
     res.status(400).json({ message: 'Invalid data', error: err.message });
   }
 });
@@ -41,9 +38,6 @@ router.get('/taken-slots/:date', async (req, res) => {
     }).select('time -_id');
     res.json(bookings.map(b => b.time));
   } catch (err) {
-    if (err.name === 'MongooseError' || err.message?.includes('connected')) {
-      return res.json([]);
-    }
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 });

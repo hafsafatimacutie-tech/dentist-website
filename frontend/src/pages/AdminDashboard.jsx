@@ -3,20 +3,11 @@ import { useNavigate, Link } from 'react-router-dom';
 import client from '../api/client';
 
 const STATUS_OPTIONS = ['pending', 'confirmed', 'rejected', 'completed', 'cancelled'];
-const INITIAL_CREDENTIAL_FORM = {
-  currentPassword: '',
-  newUsername: '',
-  newPassword: '',
-  confirmPassword: ''
-};
 
 export default function AdminDashboard() {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [credentialForm, setCredentialForm] = useState(INITIAL_CREDENTIAL_FORM);
-  const [credentialMessage, setCredentialMessage] = useState('');
-  const [credentialError, setCredentialError] = useState('');
   const [filter, setFilter] = useState('all');
   const navigate = useNavigate();
 
@@ -55,30 +46,6 @@ export default function AdminDashboard() {
     navigate('/admin/login');
   }
 
-  async function handleCredentialsChange(e) {
-    e.preventDefault();
-    setCredentialMessage('');
-    setCredentialError('');
-
-    if (credentialForm.newPassword && credentialForm.newPassword !== credentialForm.confirmPassword) {
-      setCredentialError('New passwords do not match.');
-      return;
-    }
-
-    try {
-      const payload = {
-        currentPassword: credentialForm.currentPassword,
-        newUsername: credentialForm.newUsername.trim() || undefined,
-        newPassword: credentialForm.newPassword || undefined
-      };
-      const res = await client.put('/auth/change-credentials', payload);
-      setCredentialMessage(res.data.message || 'Credentials updated.');
-      setCredentialForm(INITIAL_CREDENTIAL_FORM);
-    } catch (err) {
-      setCredentialError(err.response?.data?.message || 'Could not update credentials.');
-    }
-  }
-
   const visible = filter === 'all' ? bookings : bookings.filter((b) => b.status === filter);
 
   return (
@@ -89,50 +56,9 @@ export default function AdminDashboard() {
           <h1 style={{ margin: 0 }}>Appointment Requests</h1>
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
-          <Link to="/admin/content" className="btn btn-secondary">Manage Content</Link>
           <Link to="/admin/gallery" className="btn btn-secondary">Manage Photos</Link>
           <button className="btn btn-secondary" onClick={logout}>Log Out</button>
         </div>
-      </div>
-
-      <div className="card" style={{ marginBottom: 24 }}>
-        <h3 style={{ marginTop: 0 }}>Change Admin Credentials</h3>
-        <form onSubmit={handleCredentialsChange}>
-          <div className="form-group">
-            <label>Current password</label>
-            <input
-              type="password"
-              value={credentialForm.currentPassword}
-              onChange={(e) => setCredentialForm({ ...credentialForm, currentPassword: e.target.value })}
-            />
-          </div>
-          <div className="form-group">
-            <label>New username (optional)</label>
-            <input
-              value={credentialForm.newUsername}
-              onChange={(e) => setCredentialForm({ ...credentialForm, newUsername: e.target.value })}
-            />
-          </div>
-          <div className="form-group">
-            <label>New password (optional)</label>
-            <input
-              type="password"
-              value={credentialForm.newPassword}
-              onChange={(e) => setCredentialForm({ ...credentialForm, newPassword: e.target.value })}
-            />
-          </div>
-          <div className="form-group">
-            <label>Confirm new password</label>
-            <input
-              type="password"
-              value={credentialForm.confirmPassword}
-              onChange={(e) => setCredentialForm({ ...credentialForm, confirmPassword: e.target.value })}
-            />
-          </div>
-          {credentialError && <p style={{ color: 'var(--color-coral-dark)' }}>{credentialError}</p>}
-          {credentialMessage && <p style={{ color: 'var(--color-forest)' }}>{credentialMessage}</p>}
-          <button className="btn btn-primary" type="submit">Update Credentials</button>
-        </form>
       </div>
 
       <div style={{ display: 'flex', gap: 8, marginBottom: 24, flexWrap: 'wrap' }}>

@@ -12,7 +12,6 @@ import Gallery from './pages/Gallery';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminGallery from './pages/AdminGallery';
-import AdminContent from './pages/AdminContent';
 
 export default function App() {
   return (
@@ -40,14 +39,6 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <AdminGallery />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/content"
-            element={
-              <ProtectedRoute>
-                <AdminContent />
               </ProtectedRoute>
             }
           />

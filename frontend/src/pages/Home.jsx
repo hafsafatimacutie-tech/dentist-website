@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import client from '../api/client';
 
+const IMAGE_BASE = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace('/api', '');
+
 export default function Home() {
   const [galleryPreview, setGalleryPreview] = useState([]);
 
@@ -21,15 +23,15 @@ export default function Home() {
           display: 'flex',
           alignItems: 'flex-end',
           backgroundImage:
-            'linear-gradient(180deg, rgba(16,32,54,0.15) 0%, rgba(16,32,54,0.75) 100%), url(https://images.unsplash.com/photo-1629909613654-28e377c37b09?q=80&w=1600&auto=format&fit=crop)',
+            'linear-gradient(180deg, rgba(20,36,26,0.15) 0%, rgba(20,36,26,0.75) 100%), url(https://images.unsplash.com/photo-1629909613654-28e377c37b09?q=80&w=1600&auto=format&fit=crop)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
       >
-        <div className="container hero-content">
+        <div className="container" style={{ paddingBottom: 72, paddingTop: 140 }}>
           <span
             className="eyebrow"
-            style={{ color: '#F3E9DA', background: 'rgba(255,255,255,0.12)', padding: '6px 14px', borderRadius: 999, display: 'inline-block', maxWidth: '100%' }}
+            style={{ color: '#F3E9DA', background: 'rgba(255,255,255,0.12)', padding: '6px 14px', borderRadius: 999 }}
           >
             ✦ Newly opened in Hyderabad — now welcoming patients
           </span>
@@ -40,7 +42,7 @@ export default function Home() {
             We just opened our doors — modern equipment, a calm space, and a
             team that takes the time to explain every step. Be one of our first patients.
           </p>
-          <div style={{ display: 'flex', gap: 16, marginTop: 28, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: 16, marginTop: 28 }}>
             <Link to="/booking" className="btn btn-primary">Book an Appointment</Link>
             <Link to="/services" className="btn btn-secondary" style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', borderColor: 'rgba(255,255,255,0.5)' }}>
               View Services
@@ -80,7 +82,7 @@ export default function Home() {
               {galleryPreview.map((img) => (
                 <div key={img._id} style={{ borderRadius: 'var(--radius)', overflow: 'hidden', boxShadow: 'var(--shadow-soft)' }}>
                   <img
-                    src={img.url}
+                    src={`${IMAGE_BASE}/uploads/${img.filename}`}
                     alt={img.caption || 'Clinic photo'}
                     style={{ width: '100%', height: 260, objectFit: 'cover', display: 'block' }}
                   />

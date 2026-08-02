@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import client from '../api/client';
 
+const IMAGE_BASE = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace('/api', '');
+
 export default function Gallery() {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -27,7 +29,7 @@ export default function Gallery() {
         {images.map((img) => (
           <div key={img._id} style={{ borderRadius: 'var(--radius)', overflow: 'hidden', boxShadow: 'var(--shadow-soft)' }}>
             <img
-              src={img.url}
+              src={`${IMAGE_BASE}/uploads/${img.filename}`}
               alt={img.caption || 'Clinic photo'}
               style={{ width: '100%', height: 280, objectFit: 'cover', display: 'block' }}
             />

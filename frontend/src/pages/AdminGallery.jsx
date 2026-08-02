@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import client from '../api/client';
 
+const IMAGE_BASE = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').replace('/api', '');
+
 export default function AdminGallery() {
   const [images, setImages] = useState([]);
   const [file, setFile] = useState(null);
@@ -100,7 +102,7 @@ export default function AdminGallery() {
         {images.map((img) => (
           <div key={img._id} className="card" style={{ padding: 0, overflow: 'hidden' }}>
             <img
-              src={img.url}
+              src={`${IMAGE_BASE}/uploads/${img.filename}`}
               alt={img.caption || 'Uploaded photo'}
               style={{ width: '100%', height: 180, objectFit: 'cover', display: 'block' }}
             />
