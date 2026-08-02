@@ -56,6 +56,7 @@ export default function AdminDashboard() {
           <h1 style={{ margin: 0 }}>Appointment Requests</h1>
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
+          <Link to="/admin/settings" className="btn btn-secondary">Clinic Info</Link>
           <Link to="/admin/gallery" className="btn btn-secondary">Manage Photos</Link>
           <button className="btn btn-secondary" onClick={logout}>Log Out</button>
         </div>

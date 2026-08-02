@@ -12,6 +12,7 @@ import Gallery from './pages/Gallery';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminGallery from './pages/AdminGallery';
+import AdminSettings from './pages/AdminSettings';
 
 export default function App() {
   return (
@@ -39,6 +40,14 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <AdminGallery />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/settings"
+            element={
+              <ProtectedRoute>
+                <AdminSettings />
               </ProtectedRoute>
             }
           />
