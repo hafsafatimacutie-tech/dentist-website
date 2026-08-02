@@ -1,4 +1,4 @@
-# Bright Smile Dental Clinic — Full Stack Website
+# SmileFit Dental Studio — Full Stack Website
 
 A complete MERN stack website for a dental clinic with an appointment booking system
 and an admin dashboard to manage bookings.
