@@ -14,7 +14,7 @@ export default function Navbar() {
   return (
     <header style={styles.header}>
       <div className="container navbar-inner" style={styles.inner}>
-        <Link to="/" style={styles.logo}>SmileFit</Link>
+        <Link to="/" className="navbar-logo" style={styles.logo}>SmileFit Dental Studio</Link>
         <nav className="navbar-links" style={styles.nav}>
           {links.map((l) => (
             <Link
@@ -56,7 +56,6 @@ const styles = {
   logo: {
     fontFamily: 'var(--font-display)',
     fontWeight: 600,
-    fontSize: '1.3rem',
     color: 'var(--color-forest)',
     textDecoration: 'none',
   },

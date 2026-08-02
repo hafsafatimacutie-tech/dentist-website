@@ -122,6 +122,8 @@ a { color: var(--color-forest); }
 @media (max-width: 860px) {
   .grid-3, .grid-2 { grid-template-columns: 1fr; }
   .section { padding: 48px 0; }
+  .navbar-logo { font-size: 1.15rem; }
+  .navbar-links { gap: 18px; font-size: 0.9rem; }
 }
 
 /* Safety net: no image should ever overflow its container */
@@ -138,6 +140,10 @@ img { max-width: 100%; height: auto; display: block; }
   flex-wrap: wrap;
   row-gap: 10px;
 }
+.navbar-logo {
+  font-size: 1.3rem;
+  white-space: nowrap;
+}
 .navbar-links {
   flex-wrap: wrap;
   row-gap: 8px;
@@ -151,6 +157,14 @@ img { max-width: 100%; height: auto; display: block; }
   }
   .hero-content h1 {
     font-size: 1.9rem;
+  }
+  /* Logo takes its own full-width row on mobile so it never collides
+     with nav links or the button - clean stacked layout instead of
+     cramming everything into one row. */
+  .navbar-logo {
+    flex: 1 1 100%;
+    font-size: 1.05rem;
+    white-space: normal;
   }
   .navbar-links {
     gap: 14px;
