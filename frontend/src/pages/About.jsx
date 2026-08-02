@@ -4,7 +4,7 @@ export default function About() {
       <span className="eyebrow">About the clinic</span>
       <h1>Care from someone who remembers your name.</h1>
       <p style={{ fontSize: '1.05rem' }}>
-        SmileFit Dental Studio was founded on a simple idea: dental visits shouldn't feel
+        Bright Smile Dental Clinic was founded on a simple idea: dental visits shouldn't feel
         clinical, rushed, or intimidating. Our team takes the time to explain every step of your
         treatment, so you always know what's happening and why.
       </p>
