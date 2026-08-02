@@ -13,9 +13,9 @@ export default function Navbar() {
 
   return (
     <header style={styles.header}>
-      <div className="container" style={styles.inner}>
-        <Link to="/" style={styles.logo}>Bright Smile</Link>
-        <nav style={styles.nav}>
+      <div className="container navbar-inner" style={styles.inner}>
+        <Link to="/" style={styles.logo}>SmileFit</Link>
+        <nav className="navbar-links" style={styles.nav}>
           {links.map((l) => (
             <Link
               key={l.to}
@@ -51,6 +51,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: '16px 24px',
+    gap: 16,
   },
   logo: {
     fontFamily: 'var(--font-display)',
@@ -61,7 +62,6 @@ const styles = {
   },
   nav: {
     display: 'flex',
-    gap: 28,
   },
   link: {
     textDecoration: 'none',

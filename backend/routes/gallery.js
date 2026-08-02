@@ -1,29 +1,18 @@
 const express = require('express');
 const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+const streamifier = require('streamifier');
+const cloudinary = require('../config/cloudinary');
 const GalleryImage = require('../models/GalleryImage');
 const requireAdmin = require('../middleware/auth');
 
 const router = express.Router();
 
-const UPLOAD_DIR = path.join(__dirname, '..', 'uploads');
-if (!fs.existsSync(UPLOAD_DIR)) {
-  fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-}
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, UPLOAD_DIR),
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    const unique = `${Date.now()}-${Math.round(Math.random() * 1e9)}${ext}`;
-    cb(null, unique);
-  }
-});
-
+// Use memory storage - file stays as a buffer, never touches the server's disk.
+// This is what makes uploads persist across Render redeploys (unlike before,
+// where files were saved to Render's ephemeral local disk and wiped on every deploy).
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 const upload = multer({
-  storage,
+  storage: multer.memoryStorage(),
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB max per image
   fileFilter: (req, file, cb) => {
     if (!ALLOWED_TYPES.includes(file.mimetype)) {
@@ -32,6 +21,19 @@ const upload = multer({
     cb(null, true);
   }
 });
+
+function uploadBufferToCloudinary(buffer) {
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      { folder: 'smilefit-dental-studio' },
+      (error, result) => {
+        if (error) return reject(error);
+        resolve(result);
+      }
+    );
+    streamifier.createReadStream(buffer).pipe(uploadStream);
+  });
+}
 
 // Public: list all images (optionally filtered by section)
 router.get('/', async (req, res) => {
@@ -50,8 +52,12 @@ router.post('/', requireAdmin, upload.single('image'), async (req, res) => {
     if (!req.file) {
       return res.status(400).json({ message: 'No image file provided' });
     }
+
+    const result = await uploadBufferToCloudinary(req.file.buffer);
+
     const image = await GalleryImage.create({
-      filename: req.file.filename,
+      url: result.secure_url,
+      publicId: result.public_id,
       caption: req.body.caption || '',
       section: req.body.section || 'gallery'
     });
@@ -67,9 +73,12 @@ router.delete('/:id', requireAdmin, async (req, res) => {
     const image = await GalleryImage.findById(req.params.id);
     if (!image) return res.status(404).json({ message: 'Image not found' });
 
-    const filePath = path.join(UPLOAD_DIR, image.filename);
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
+    // Only attempt Cloudinary cleanup if this image actually has a publicId
+    // (older records from before the Cloudinary migration won't have one -
+    // their underlying file is already gone from Render's disk anyway, so
+    // there's nothing to clean up there, just delete the DB record).
+    if (image.publicId) {
+      await cloudinary.uploader.destroy(image.publicId);
     }
     await GalleryImage.findByIdAndDelete(req.params.id);
     res.json({ message: 'Image deleted' });

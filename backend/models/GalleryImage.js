@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 
 const galleryImageSchema = new mongoose.Schema({
-  filename: { type: String, required: true },
+  url: { type: String, required: true },
+  publicId: { type: String, required: true }, // Cloudinary's ID, needed to delete the image later
   caption: { type: String, default: '' },
   section: {
     type: String,
