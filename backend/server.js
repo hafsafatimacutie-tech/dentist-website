@@ -7,7 +7,7 @@ const authRoutes = require('./routes/auth');
 const serviceRoutes = require('./routes/services');
 const bookingRoutes = require('./routes/bookings');
 const galleryRoutes = require('./routes/gallery');
-
+const settingsRoutes = require('./routes/settings');
 const app = express();
 
 connectDB();
@@ -19,7 +19,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/services', serviceRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/gallery', galleryRoutes);
-
+app.use('/api/settings', settingsRoutes);
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 
 const PORT = process.env.PORT || 5000;
