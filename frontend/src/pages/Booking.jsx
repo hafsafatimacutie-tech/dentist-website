@@ -101,7 +101,7 @@ export default function Booking() {
           <select id="service" value={form.service} onChange={(e) => update('service', e.target.value)}>
             <option value="">Select a treatment</option>
             {services.map((s) => (
-              <option key={s._id} value={s._id}>{s.name} — ₹{s.price}</option>
+              <option key={s._id} value={s._id}>{s.name}</option>
             ))}
           </select>
         </div>
