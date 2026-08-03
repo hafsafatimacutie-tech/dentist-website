@@ -8,7 +8,7 @@ const router = express.Router();
 router.post('/', async (req, res) => {
   try {
     const { patientName, phone, email, service, date, time } = req.body;
-    if (!patientName || !phone || !email || !service || !date || !time) {
+    if (!patientName || !phone || !service || !date || !time) {
       return res.status(400).json({ message: 'All fields are required' });
     }
 

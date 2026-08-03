@@ -37,7 +37,7 @@ export default function Booking() {
     e.preventDefault();
     setStatus({ type: '', message: '' });
 
-    if (!form.patientName || !form.phone || !form.email || !form.service || !form.date || !form.time) {
+    if (!form.patientName || !form.phone || !form.service || !form.date || !form.time) {
       setStatus({ type: 'error', message: 'Please fill in all fields before booking.' });
       return;
     }
@@ -85,7 +85,7 @@ export default function Booking() {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">Email (optional)</label>
             <input
               id="email"
               type="email"

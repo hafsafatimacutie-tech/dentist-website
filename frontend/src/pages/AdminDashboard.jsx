@@ -95,7 +95,7 @@ export default function AdminDashboard() {
               <div style={{ fontSize: '0.85rem', color: 'var(--color-muted)' }}>
                 {b.service?.name || 'Service'} · {b.date} at {b.time}
               </div>
-              <div style={{ fontSize: '0.8rem', color: 'var(--color-muted)' }}>{b.phone} · {b.email}</div>
+              <div style={{ fontSize: '0.8rem', color: 'var(--color-muted)' }}>{b.phone}{b.email ? ` · ${b.email}` : ''}</div>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
               <span className={`badge badge-${b.status}`}>{b.status}</span>
