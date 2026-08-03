@@ -1,13 +1,25 @@
+import { useEffect, useState } from 'react';
+import client from '../api/client';
+
 export default function About() {
+  const [settings, setSettings] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    client.get('/settings')
+      .then((res) => setSettings(res.data))
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
     <div className="section container" style={{ maxWidth: 760 }}>
       <span className="eyebrow">About the clinic</span>
       <h1>Care from someone who remembers your name.</h1>
-      <p style={{ fontSize: '1.05rem' }}>
-        SmileFit Dental Studio was founded on a simple idea: dental visits shouldn't feel
-        clinical, rushed, or intimidating. Our team takes the time to explain every step of your
-        treatment, so you always know what's happening and why.
-      </p>
+      {loading && <p>Loading…</p>}
+      {settings && (
+        <p style={{ fontSize: '1.05rem', whiteSpace: 'pre-line' }}>{settings.aboutText}</p>
+      )}
       <p>
         We treat patients of all ages — from a child's first check-up to routine care for
         grandparents — with the same attention to comfort and detail.

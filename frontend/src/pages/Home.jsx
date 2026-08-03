@@ -4,10 +4,14 @@ import client from '../api/client';
 
 export default function Home() {
   const [galleryPreview, setGalleryPreview] = useState([]);
+  const [settings, setSettings] = useState(null);
 
   useEffect(() => {
     client.get('/gallery?section=gallery')
       .then((res) => setGalleryPreview(res.data.slice(0, 3)))
+      .catch(() => {});
+    client.get('/settings')
+      .then((res) => setSettings(res.data))
       .catch(() => {});
   }, []);
 
@@ -27,18 +31,19 @@ export default function Home() {
         }}
       >
         <div className="container hero-content">
-          <span
-            className="eyebrow"
-            style={{ color: '#F3E9DA', background: 'rgba(255,255,255,0.12)', padding: '6px 14px', borderRadius: 999, display: 'inline-block', maxWidth: '100%' }}
-          >
-            ✦ Newly opened in Hyderabad — now welcoming patients
-          </span>
+          {settings?.heroTag && (
+            <span
+              className="eyebrow"
+              style={{ color: '#F3E9DA', background: 'rgba(255,255,255,0.12)', padding: '6px 14px', borderRadius: 999, display: 'inline-block', maxWidth: '100%' }}
+            >
+              {settings.heroTag}
+            </span>
+          )}
           <h1 style={{ color: '#fff', maxWidth: 640, marginTop: 18 }}>
-            A brand-new clinic, built around your comfort from day one.
+            {settings?.heroHeadline || 'Dental care that actually puts you at ease.'}
           </h1>
           <p style={{ color: '#EDE7DA', fontSize: '1.1rem', maxWidth: 520 }}>
-            We just opened our doors — modern equipment, a calm space, and a
-            team that takes the time to explain every step. Be one of our first patients.
+            {settings?.heroSubtext || ''}
           </p>
           <div style={{ display: 'flex', gap: 16, marginTop: 28, flexWrap: 'wrap' }}>
             <Link to="/booking" className="btn btn-primary">Book an Appointment</Link>

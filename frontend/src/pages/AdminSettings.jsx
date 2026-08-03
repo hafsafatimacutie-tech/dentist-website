@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import client from '../api/client';
 
 export default function AdminSettings() {
-  const [form, setForm] = useState({ clinicName: '', address: '', phone: '', email: '', hours: '' });
+  const [form, setForm] = useState({ clinicName: '', address: '', phone: '', email: '', hours: '', aboutText: '', heroTag: '', heroHeadline: '', heroSubtext: '' });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [status, setStatus] = useState({ type: '', message: '' });
@@ -109,6 +109,39 @@ export default function AdminSettings() {
           <div className="form-group">
             <label htmlFor="hours">Hours</label>
             <input id="hours" value={form.hours} onChange={(e) => update('hours', e.target.value)} placeholder="e.g. Mon–Sat, 9:00 AM – 5:00 PM" />
+          </div>
+          <div className="form-group">
+            <label htmlFor="aboutText">About Page Text</label>
+            <textarea
+              id="aboutText"
+              value={form.aboutText}
+              onChange={(e) => update('aboutText', e.target.value)}
+              rows={4}
+              style={{ width: '100%', padding: '12px 14px', borderRadius: 10, border: '1.5px solid var(--color-border)', fontFamily: 'var(--font-body)', fontSize: '0.95rem' }}
+            />
+          </div>
+
+          <h3 style={{ marginTop: 32, marginBottom: 4 }}>Homepage Banner</h3>
+          <p style={{ fontSize: '0.85rem', marginBottom: 16 }}>
+            This is the big text visitors see first. Useful to update once "newly opened" no longer applies.
+          </p>
+          <div className="form-group">
+            <label htmlFor="heroTag">Small Tag Line (above the headline)</label>
+            <input id="heroTag" value={form.heroTag} onChange={(e) => update('heroTag', e.target.value)} placeholder="e.g. ✦ Trusted dental care in Hyderabad" />
+          </div>
+          <div className="form-group">
+            <label htmlFor="heroHeadline">Main Headline</label>
+            <input id="heroHeadline" value={form.heroHeadline} onChange={(e) => update('heroHeadline', e.target.value)} />
+          </div>
+          <div className="form-group">
+            <label htmlFor="heroSubtext">Subtext (short paragraph below headline)</label>
+            <textarea
+              id="heroSubtext"
+              value={form.heroSubtext}
+              onChange={(e) => update('heroSubtext', e.target.value)}
+              rows={3}
+              style={{ width: '100%', padding: '12px 14px', borderRadius: 10, border: '1.5px solid var(--color-border)', fontFamily: 'var(--font-body)', fontSize: '0.95rem' }}
+            />
           </div>
 
           {status.message && (

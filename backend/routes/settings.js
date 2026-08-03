@@ -28,12 +28,16 @@ router.get('/', async (req, res) => {
 router.put('/', requireAdmin, async (req, res) => {
   try {
     const settings = await getOrCreateSettings();
-    const { clinicName, address, phone, email, hours } = req.body;
+    const { clinicName, address, phone, email, hours, aboutText, heroTag, heroHeadline, heroSubtext } = req.body;
     if (clinicName !== undefined) settings.clinicName = clinicName;
     if (address !== undefined) settings.address = address;
     if (phone !== undefined) settings.phone = phone;
     if (email !== undefined) settings.email = email;
     if (hours !== undefined) settings.hours = hours;
+    if (aboutText !== undefined) settings.aboutText = aboutText;
+    if (heroTag !== undefined) settings.heroTag = heroTag;
+    if (heroHeadline !== undefined) settings.heroHeadline = heroHeadline;
+    if (heroSubtext !== undefined) settings.heroSubtext = heroSubtext;
     await settings.save();
     res.json(settings);
   } catch (err) {
