@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import client from '../api/client';
 
 export default function Services() {
@@ -14,6 +13,18 @@ export default function Services() {
       .finally(() => setLoading(false));
   }, []);
 
+  // Group services by category, preserving first-seen category order
+  const categoryOrder = [];
+  const grouped = {};
+  services.forEach((s) => {
+    const cat = s.category || 'Other';
+    if (!grouped[cat]) {
+      grouped[cat] = [];
+      categoryOrder.push(cat);
+    }
+    grouped[cat].push(s);
+  });
+
   return (
     <div className="section container">
       <span className="eyebrow">Treatments</span>
@@ -22,18 +33,38 @@ export default function Services() {
       {loading && <p>Loading services…</p>}
       {error && <p style={{ color: 'var(--color-coral-dark)' }}>{error}</p>}
 
-      <div className="grid grid-3">
-        {services.map((s) => (
-          <div className="card" key={s._id}>
-            <h3>{s.name}</h3>
-            <p>{s.description}</p>
-            <div style={{ fontWeight: 600, color: 'var(--color-forest)', marginBottom: 12 }}>
-              ₹{s.price} · {s.durationMinutes} min
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+        {categoryOrder.map((cat) => (
+          <details key={cat} className="card" style={{ padding: 0, overflow: 'hidden' }}>
+            <summary
+              style={{
+                cursor: 'pointer',
+                listStyle: 'none',
+                padding: '18px 24px',
+                fontWeight: 600,
+                fontSize: '1.05rem',
+                color: 'var(--color-forest)',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
+              {cat}
+              <span aria-hidden="true" style={{ fontSize: '0.85rem', color: 'var(--color-muted)' }}>▾</span>
+            </summary>
+            <div style={{ padding: '0 24px 20px' }}>
+              <ul style={{ margin: 0, paddingLeft: 20 }}>
+                {grouped[cat].map((s) => (
+                  <li key={s._id} style={{ marginBottom: 10 }}>
+                    <span style={{ fontWeight: 500 }}>{s.name}</span>
+                    {s.description && (
+                      <div style={{ fontSize: '0.9rem', color: 'var(--color-muted)' }}>{s.description}</div>
+                    )}
+                  </li>
+                ))}
+              </ul>
             </div>
-            <Link to="/booking" className="btn btn-secondary" style={{ padding: '9px 18px', fontSize: '0.85rem' }}>
-              Book This
-            </Link>
-          </div>
+          </details>
         ))}
       </div>
 
@@ -43,3 +74,4 @@ export default function Services() {
     </div>
   );
 }
+
