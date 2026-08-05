@@ -28,7 +28,11 @@ router.get('/', async (req, res) => {
 router.put('/', requireAdmin, async (req, res) => {
   try {
     const settings = await getOrCreateSettings();
-    const { clinicName, address, phone, email, hours, aboutText, heroTag, heroHeadline, heroSubtext } = req.body;
+    const {
+      clinicName, address, phone, email, hours, aboutText,
+      heroTag, heroHeadline, heroSubtext,
+      whyChooseUsEyebrow, whyChooseUsHeading, whyChooseUsItems,
+    } = req.body;
     if (clinicName !== undefined) settings.clinicName = clinicName;
     if (address !== undefined) settings.address = address;
     if (phone !== undefined) settings.phone = phone;
@@ -38,6 +42,13 @@ router.put('/', requireAdmin, async (req, res) => {
     if (heroTag !== undefined) settings.heroTag = heroTag;
     if (heroHeadline !== undefined) settings.heroHeadline = heroHeadline;
     if (heroSubtext !== undefined) settings.heroSubtext = heroSubtext;
+    if (whyChooseUsEyebrow !== undefined) settings.whyChooseUsEyebrow = whyChooseUsEyebrow;
+    if (whyChooseUsHeading !== undefined) settings.whyChooseUsHeading = whyChooseUsHeading;
+    if (Array.isArray(whyChooseUsItems)) {
+      settings.whyChooseUsItems = whyChooseUsItems
+        .filter((item) => item && (item.title || item.description))
+        .map((item) => ({ title: item.title || '', description: item.description || '' }));
+    }
     await settings.save();
     res.json(settings);
   } catch (err) {
