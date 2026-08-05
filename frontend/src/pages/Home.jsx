@@ -2,6 +2,12 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import client from '../api/client';
 
+const DEFAULT_WHY_CHOOSE_US_ITEMS = [
+  { title: 'Instant Booking', description: 'Pick a service, pick a slot, done — no back-and-forth calls to find a time that works.' },
+  { title: 'Transparent Pricing', description: "Every treatment is listed with clear pricing upfront, so there's never a surprise at checkout." },
+  { title: 'Gentle, Modern Care', description: 'Modern equipment and a calm, judgment-free environment — especially for anxious first visits.' },
+];
+
 export default function Home() {
   const [galleryPreview, setGalleryPreview] = useState([]);
   const [settings, setSettings] = useState(null);
@@ -56,21 +62,15 @@ export default function Home() {
 
       <section className="section" style={{ background: 'var(--color-sand)' }}>
         <div className="container">
-          <span className="eyebrow">Why patients choose us</span>
-          <h2 style={{ marginBottom: 32 }}>Care built around your schedule</h2>
+          <span className="eyebrow">{settings?.whyChooseUsEyebrow || 'Why patients choose us'}</span>
+          <h2 style={{ marginBottom: 32 }}>{settings?.whyChooseUsHeading || 'Care built around your schedule'}</h2>
           <div className="grid grid-3">
-            <div className="card">
-              <h3>Instant Booking</h3>
-              <p>Pick a service, pick a slot, done — no back-and-forth calls to find a time that works.</p>
-            </div>
-            <div className="card">
-              <h3>Transparent Pricing</h3>
-              <p>Every treatment is listed with clear pricing upfront, so there's never a surprise at checkout.</p>
-            </div>
-            <div className="card">
-              <h3>Gentle, Modern Care</h3>
-              <p>Modern equipment and a calm, judgment-free environment — especially for anxious first visits.</p>
-            </div>
+            {(settings?.whyChooseUsItems?.length ? settings.whyChooseUsItems : DEFAULT_WHY_CHOOSE_US_ITEMS).map((item, i) => (
+              <div className="card" key={item._id || i}>
+                <h3>{item.title}</h3>
+                <p>{item.description}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
