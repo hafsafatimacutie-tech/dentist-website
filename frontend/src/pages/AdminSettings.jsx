@@ -3,7 +3,16 @@ import { Link, useNavigate } from 'react-router-dom';
 import client from '../api/client';
 
 export default function AdminSettings() {
-  const [form, setForm] = useState({ clinicName: '', address: '', phone: '', email: '', hours: '', aboutText: '', heroTag: '', heroHeadline: '', heroSubtext: '' });
+  const [form, setForm] = useState({
+    clinicName: '', address: '', phone: '', email: '', hours: '', aboutText: '',
+    heroTag: '', heroHeadline: '', heroSubtext: '',
+    whyChooseUsEyebrow: '', whyChooseUsHeading: '',
+    whyChooseUsItems: [
+      { title: 'Instant Booking', description: 'Pick a service, pick a slot, done — no back-and-forth calls to find a time that works.' },
+      { title: 'Transparent Pricing', description: "Every treatment is listed with clear pricing upfront, so there's never a surprise at checkout." },
+      { title: 'Gentle, Modern Care', description: 'Modern equipment and a calm, judgment-free environment — especially for anxious first visits.' },
+    ],
+  });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [status, setStatus] = useState({ type: '', message: '' });
@@ -15,13 +24,33 @@ export default function AdminSettings() {
 
   useEffect(() => {
     client.get('/settings')
-      .then((res) => setForm(res.data))
+      .then((res) => setForm((f) => ({
+        ...f,
+        ...res.data,
+        whyChooseUsItems: res.data.whyChooseUsItems?.length ? res.data.whyChooseUsItems : f.whyChooseUsItems,
+      })))
       .catch(() => setStatus({ type: 'error', message: 'Could not load current settings.' }))
       .finally(() => setLoading(false));
   }, []);
 
   function update(field, value) {
     setForm((f) => ({ ...f, [field]: value }));
+  }
+
+  function updateWhyItem(index, field, value) {
+    setForm((f) => {
+      const items = [...f.whyChooseUsItems];
+      items[index] = { ...items[index], [field]: value };
+      return { ...f, whyChooseUsItems: items };
+    });
+  }
+
+  function addWhyItem() {
+    setForm((f) => ({ ...f, whyChooseUsItems: [...f.whyChooseUsItems, { title: '', description: '' }] }));
+  }
+
+  function removeWhyItem(index) {
+    setForm((f) => ({ ...f, whyChooseUsItems: f.whyChooseUsItems.filter((_, i) => i !== index) }));
   }
 
   function updateCred(field, value) {
@@ -143,6 +172,76 @@ export default function AdminSettings() {
               style={{ width: '100%', padding: '12px 14px', borderRadius: 10, border: '1.5px solid var(--color-border)', fontFamily: 'var(--font-body)', fontSize: '0.95rem' }}
             />
           </div>
+
+          <h3 style={{ marginTop: 32, marginBottom: 4 }}>Why Choose Us Section</h3>
+          <p style={{ fontSize: '0.85rem', marginBottom: 16 }}>
+            The three cards on the homepage explaining why patients should book with you.
+          </p>
+          <div className="form-group">
+            <label htmlFor="whyChooseUsEyebrow">Small Tag Line</label>
+            <input
+              id="whyChooseUsEyebrow"
+              value={form.whyChooseUsEyebrow}
+              onChange={(e) => update('whyChooseUsEyebrow', e.target.value)}
+              placeholder="e.g. Why patients choose us"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="whyChooseUsHeading">Heading</label>
+            <input
+              id="whyChooseUsHeading"
+              value={form.whyChooseUsHeading}
+              onChange={(e) => update('whyChooseUsHeading', e.target.value)}
+              placeholder="e.g. Care built around your schedule"
+            />
+          </div>
+
+          {form.whyChooseUsItems.map((item, i) => (
+            <div
+              key={i}
+              className="card"
+              style={{ marginBottom: 16, background: 'var(--color-sand)' }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                <strong>Card {i + 1}</strong>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => removeWhyItem(i)}
+                  style={{ padding: '4px 10px', fontSize: '0.85rem' }}
+                >
+                  Remove
+                </button>
+              </div>
+              <div className="form-group">
+                <label htmlFor={`whyTitle-${i}`}>Title</label>
+                <input
+                  id={`whyTitle-${i}`}
+                  value={item.title}
+                  onChange={(e) => updateWhyItem(i, 'title', e.target.value)}
+                  placeholder="e.g. Instant Booking"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor={`whyDesc-${i}`}>Description</label>
+                <textarea
+                  id={`whyDesc-${i}`}
+                  value={item.description}
+                  onChange={(e) => updateWhyItem(i, 'description', e.target.value)}
+                  rows={2}
+                  style={{ width: '100%', padding: '12px 14px', borderRadius: 10, border: '1.5px solid var(--color-border)', fontFamily: 'var(--font-body)', fontSize: '0.95rem' }}
+                />
+              </div>
+            </div>
+          ))}
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={addWhyItem}
+            style={{ marginBottom: 24 }}
+          >
+            + Add Card
+          </button>
 
           {status.message && (
             <p style={{ color: status.type === 'error' ? 'var(--color-coral-dark)' : 'var(--color-forest)', fontWeight: 500 }}>
